@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -47,6 +47,19 @@ public class ErrorHandler {
         ApiError response = errorDetails("File Not Found !", ex, NOT_FOUND, request);
         return ResponseEntity
                 .status(NOT_FOUND)
+                .contentType(getMediaType())
+                .body(response);
+    }
+
+    @ExceptionHandler({
+            IllegalStateException.class,
+            IOException.class
+    })
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
+    ResponseEntity<ApiError> handleException(Exception ex, HttpServletRequest request) {
+        ApiError response = errorDetails(ex.getMessage(), ex, INTERNAL_SERVER_ERROR, request);
+        return ResponseEntity
+                .status(INTERNAL_SERVER_ERROR)
                 .contentType(getMediaType())
                 .body(response);
     }

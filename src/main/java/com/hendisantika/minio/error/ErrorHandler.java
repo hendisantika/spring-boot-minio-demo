@@ -1,5 +1,6 @@
 package com.hendisantika.minio.error;
 
+import com.hendisantika.minio.helper.MediaTypeInfo;
 import com.jlefebure.spring.boot.minio.MinioException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

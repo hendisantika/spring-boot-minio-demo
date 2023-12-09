@@ -29,4 +29,13 @@ public abstract class FileResponseDecorator implements FileResponseMapper {
                 ? linkUtils.addOperationWithLink(response)
                 : response;
     }
+
+    @Override
+    public FileResponse fileGetResponse(ObjectStat objectStat) {
+        FileResponse fileResponse = fileResponse(objectStat);
+        String mediaType = MediaTypeInfo.getCurrentMediaType();
+        return mediaType != null && mediaType.equals("hal")
+                ? linkUtils.getOperationWithLink(fileResponse)
+                : fileResponse;
+    }
 }

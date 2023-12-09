@@ -3,6 +3,7 @@ package com.hendisantika.minio.error;
 import com.jlefebure.spring.boot.minio.MinioException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -62,5 +64,17 @@ public class ErrorHandler {
                 .status(INTERNAL_SERVER_ERROR)
                 .contentType(getMediaType())
                 .body(response);
+    }
+
+    private ApiError errorDetails(String message, Exception exception, HttpStatus httpStatus, HttpServletRequest request) {
+        var errorDetail = ApiError.builder()
+                .message(message)
+                .status(httpStatus.value())
+                .timestamp(new Date())
+                .error(httpStatus.getReasonPhrase())
+                .path(request.getRequestURI().substring(request.getContextPath().length())).build();
+
+        log.error(exception.getMessage());
+        return errorDetail;
     }
 }

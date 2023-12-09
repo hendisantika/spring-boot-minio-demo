@@ -4,6 +4,7 @@ import com.jlefebure.spring.boot.minio.MinioException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -76,5 +77,17 @@ public class ErrorHandler {
 
         log.error(exception.getMessage());
         return errorDetail;
+    }
+
+    private MediaType getMediaType() {
+        switch (MediaTypeInfo.getCurrentMediaType()) {
+            case "hal":
+            case "json":
+                return MediaType.APPLICATION_JSON;
+            case "xml":
+                return MediaType.APPLICATION_XML;
+            default:
+                return MediaType.ALL;
+        }
     }
 }

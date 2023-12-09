@@ -1,5 +1,6 @@
 package com.hendisantika.minio.mapper;
 
+import com.hendisantika.minio.payload.FileResponse;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

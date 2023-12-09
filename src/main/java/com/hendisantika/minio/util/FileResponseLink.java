@@ -39,4 +39,26 @@ public class FileResponseLink implements LinkUtils<FileResponse> {
         };
         return response.add(links);
     }
+
+    public FileResponse getOperationWithLink(FileResponse response) {
+        Link[] links = new Link[]{
+                linkTo(methodOn(FileController.class).fileUpload(null))
+                        .withRel("file")
+                        .withType("POST")
+                        .withDeprecation("Add File"),
+                linkTo(methodOn(FileController.class).viewFile(response.getFilename()))
+                        .withRel("file")
+                        .withType("GET")
+                        .withDeprecation("View File"),
+                linkTo(methodOn(FileController.class).downloadFile(response.getFilename()))
+                        .withRel("file")
+                        .withType("GET")
+                        .withDeprecation("Download File"),
+                linkTo(methodOn(FileController.class).removeFile(response.getFilename()))
+                        .withRel("file")
+                        .withType("DELETE")
+                        .withDeprecation("Delete File")
+        };
+        return response.add(links);
+    }
 }

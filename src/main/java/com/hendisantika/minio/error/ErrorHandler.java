@@ -1,5 +1,6 @@
 package com.hendisantika.minio.error;
 
+import com.jlefebure.spring.boot.minio.MinioException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -7,7 +8,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.lang.reflect.InvocationTargetException;
+
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,6 +34,19 @@ public class ErrorHandler {
         ApiError response = errorDetails(ex.getMessage(), ex, BAD_REQUEST, request);
         return ResponseEntity
                 .status(BAD_REQUEST)
+                .contentType(getMediaType())
+                .body(response);
+    }
+
+    @ExceptionHandler({
+            MinioException.class,
+            InvocationTargetException.class
+    })
+    @ResponseStatus(NOT_FOUND)
+    ResponseEntity<ApiError> handleMinioException(Exception ex, HttpServletRequest request) {
+        ApiError response = errorDetails("File Not Found !", ex, NOT_FOUND, request);
+        return ResponseEntity
+                .status(NOT_FOUND)
                 .contentType(getMediaType())
                 .body(response);
     }

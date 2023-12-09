@@ -93,6 +93,24 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>build-image</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>build-image</goal>
+                        </goals>
+                        <configuration>
+                            <layers>
+                                <enabled>true</enabled>
+                            </layers>
+                            <image>
+                                <name>${project.name}-ex:${project.version}</name>
+                                <cleanCache>true</cleanCache>
+                            </image>
+                        </configuration>
+                    </execution>
+                </executions>
                 <configuration>
                     <excludes>
                         <exclude>

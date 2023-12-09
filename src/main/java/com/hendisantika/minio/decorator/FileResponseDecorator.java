@@ -1,6 +1,8 @@
 package com.hendisantika.minio.decorator;
 
+import com.hendisantika.minio.helper.MediaTypeInfo;
 import com.hendisantika.minio.mapper.FileResponseMapper;
+import com.hendisantika.minio.payload.FileResponse;
 import com.hendisantika.minio.util.FileResponseLink;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,4 +21,12 @@ public abstract class FileResponseDecorator implements FileResponseMapper {
     @Setter(onMethod = @__({@Autowired}))
     FileResponseLink linkUtils;
 
+    @Override
+    public FileResponse fileAddResponse(ObjectStat objectStat) {
+        FileResponse response = fileResponse(objectStat);
+        String mediaType = MediaTypeInfo.getCurrentMediaType();
+        return mediaType != null && mediaType.equals("hal")
+                ? linkUtils.addOperationWithLink(response)
+                : response;
+    }
 }
